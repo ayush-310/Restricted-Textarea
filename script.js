@@ -4,22 +4,29 @@ let max_word_count = 250;
 
 word_count.innerHTML = textarea.value.length + "/" + max_word_count;
 
-textarea.addEventListener('input', function () {
+function UpdateUI() {
+    let len = textarea.value.length;
+    word_count.innerHTML = len + "/" + max_word_count;
 
-    word_count.innerHTML = textarea.value.length + "/" + max_word_count;
-
-    if (textarea.value.length < 150) {
-        textarea.style.border = "2px solid green";
-        textarea.style.color = "green";
-        word_count.style.color = "green";
-    } else if (textarea.value.length >= 150 && textarea.value.length < 250) {
-        textarea.style.border = "2px solid orange";
-        textarea.style.color = "orange";
-        word_count.style.color = "orange";
-    } else {
-        textarea.value = textarea.value.slice(0, max_word_count - 1);
-        textarea.style.border = "2px solid red";
-        textarea.style.color = "red";
-        word_count.style.color = "red";
+    // Handling edge case where the user pastes a string longer than max_word_count
+    if(len > max_word_count){
+        textarea.value = textarea.value.slice(0, max_word_count);
+        len = max_word_count;
     }
-})
+
+    if (len < 150) {
+        setStyle("green")
+    } else if (len >= 150 && len < 250) {
+        setStyle("orange")
+    } else {
+        setStyle("red")
+    }
+}
+
+function setStyle(color) {
+    textarea.style.border = `2px solid ${color}`;
+    textarea.style.color = `${color}`;
+    word_count.style.color = `${color}`;
+}
+
+textarea.addEventListener('input', UpdateUI)
